@@ -11,6 +11,6 @@ class Local extends Proxy\Locations
      */
     public static function renderLocation()
     {
-        self::renderTemplate( 'location' );
+        self::renderTemplate('location');
     }
 }

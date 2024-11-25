@@ -12,7 +12,7 @@ class Ajax extends BooklyLib\Base\Ajax
     public static function getLocations()
     {
         $rows = Lib\Entities\Location::query('l')
-            ->select('l.id, l.name, l.info, l.position, COUNT(DISTINCT s.id) AS staff, sl.staff_id')
+            ->select('l.id, l.name, l.info, l.color, l.position, COUNT(DISTINCT s.id) AS staff, sl.staff_id')
             ->leftJoin('StaffLocation', 'sl', 'sl.location_id = l.id')
             ->leftJoin('Staff', 's', 's.id = sl.staff_id', '\Bookly\Lib\Entities')
             ->groupBy('l.id')
@@ -50,7 +50,7 @@ class Ajax extends BooklyLib\Base\Ajax
     }
 
     /**
-     * Add new location.
+     * Add or update location.
      */
     public static function saveLocation()
     {
@@ -82,7 +82,7 @@ class Ajax extends BooklyLib\Base\Ajax
         }
 
         $row = Lib\Entities\Location::query('l')
-            ->select('l.id, l.name, l.info, l.position, COUNT(DISTINCT s.id) AS staff, s.id AS staff_id')
+            ->select('l.id, l.name, l.info, l.color, l.position, COUNT(DISTINCT s.id) AS staff, s.id AS staff_id')
             ->leftJoin('StaffLocation', 'sl', 'sl.location_id = l.id')
             ->leftJoin('Staff', 's', 's.id = sl.staff_id', '\Bookly\Lib\Entities')
             ->groupBy('l.id')
@@ -92,11 +92,13 @@ class Ajax extends BooklyLib\Base\Ajax
         wp_send_json_success($row);
     }
 
+    /**
+     * Get staff assigned to a location.
+     */
     public static function getLocationLists()
     {
         wp_send_json_success(array(
             'staff_id' => Lib\Entities\StaffLocation::query()->where('location_id', self::parameter('location_id'))->fetchCol('staff_id'),
         ));
     }
-
 }

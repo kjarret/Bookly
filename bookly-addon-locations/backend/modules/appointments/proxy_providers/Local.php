@@ -12,11 +12,12 @@ class Local extends Proxy\Locations
     public static function renderFilter()
     {
         $locations = Location::query()
-            ->select( 'id, name' )
-            ->sortBy( 'position' )
+            ->select('id, name, color')
+            ->sortBy('position')
             ->fetchArray();
 
-        self::renderTemplate( 'filter', compact( 'locations' ), true );
+        self::renderTemplate('filter', compact('locations'), true);
+
     }
 
 }

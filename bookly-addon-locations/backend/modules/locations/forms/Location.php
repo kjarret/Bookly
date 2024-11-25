@@ -12,17 +12,18 @@ class Location extends \Bookly\Lib\Base\Form
 
     public function configure()
     {
-        $this->setFields( array( 'id', 'name', 'info' ) );
+        // Ajout du champ "color" dans les champs gérés par le formulaire
+        $this->setFields(array('id', 'name', 'info', 'color'));
     }
 
     public function save()
     {
-        if ( $this->isNew() ) {
-            $last = \BooklyLocations\Lib\Entities\Location::query()->select( 'MAX(position) AS position' )->fetchRow();
-            $this->object->setPosition( $last['position'] + 1 );
+        // Position automatique si l'entrée est nouvelle
+        if ($this->isNew()) {
+            $last = \BooklyLocations\Lib\Entities\Location::query()->select('MAX(position) AS position')->fetchRow();
+            $this->object->setPosition($last['position'] + 1);
         }
 
         return parent::save();
     }
-
 }

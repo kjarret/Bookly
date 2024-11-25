@@ -1,5 +1,4 @@
 jQuery(function ($) {
-
     let $calendar = $('.bookly-js-calendar'),
         $staffPills = $('.bookly-js-staff-pills ul'),
         $staffLinks = $('li > a', $staffPills),
@@ -44,7 +43,7 @@ jQuery(function ($) {
             let _staff_id = $staffLinks.filter('.active').data('staff_id');
             if (_staff_id === 0) {
                 $staffFilter.booklyDropdown('getSelectedExt').forEach(function (item) {
-                    _staffMembers.push({id: item.value, title: encodeHTML(item.name.trim())});
+                    _staffMembers.push({ id: item.value, title: encodeHTML(item.name.trim()) });
                 });
             } else {
                 _staffMembers.push({
@@ -54,7 +53,7 @@ jQuery(function ($) {
             }
         } else {
             let $staffId = $('#bookly-js-staff-id');
-            _staffMembers.push({id: $staffId.val(), title: $staffId.data('name')});
+            _staffMembers.push({ id: $staffId.val(), title: $staffId.data('name') });
         }
 
         return _staffMembers;
@@ -74,7 +73,7 @@ jQuery(function ($) {
             staffMembers = [];
             this.booklyDropdown('getSelectedExt').forEach(function (item) {
                 ids.push(item.value);
-                staffMembers.push({id: item.value, title: encodeHTML(item.name.trim())});
+                staffMembers.push({ id: item.value, title: encodeHTML(item.name.trim()) });
             });
             calendar.ec.setOption('resources', staffMembers);
             setCookie('bookly_cal_st_ids', ids);
@@ -92,6 +91,7 @@ jQuery(function ($) {
             }
         }
     });
+
     if (staffIds === null) {
         $staffFilter.booklyDropdown('selectAll');
     } else if (staffIds !== '') {
@@ -99,7 +99,8 @@ jQuery(function ($) {
     } else {
         $staffFilter.booklyDropdown('toggle');
     }
-    // Populate staffMembers.
+
+    // Populate staffMembers
     $staffFilter.booklyDropdown('getSelectedExt').forEach(function (item) {
         $staffLinks.filter('[data-staff_id=' + item.value + ']').parent().show();
     });
@@ -115,6 +116,7 @@ jQuery(function ($) {
             calendar.ec.refetchEvents();
         }
     });
+
     if (serviceIds === null) {
         $servicesFilter.booklyDropdown('selectAll');
     } else if (serviceIds !== '') {
@@ -122,7 +124,8 @@ jQuery(function ($) {
     } else {
         $servicesFilter.booklyDropdown('toggle');
     }
-    // Populate serviceIds.
+
+    // Populate serviceIds
     serviceIds = $servicesFilter.booklyDropdown('getSelected');
 
     /**
@@ -135,6 +138,7 @@ jQuery(function ($) {
             calendar.ec.refetchEvents();
         }
     });
+
     if (locationIds === null || locationIds === 'all') {
         $locationsFilter.booklyDropdown('selectAll');
     } else if (locationIds !== '') {
@@ -142,7 +146,8 @@ jQuery(function ($) {
     } else {
         $locationsFilter.booklyDropdown('toggle');
     }
-    // Populate locationIds.
+
+    // Populate locationIds
     locationIds = $locationsFilter.booklyDropdown('getSelected');
 
     /**
@@ -169,8 +174,8 @@ jQuery(function ($) {
     $('input[name="bookly_calendar_refresh_rate"]').change(function () {
         $.post(
             ajaxurl,
-            {action: 'bookly_update_calendar_refresh_rate', csrf_token: BooklyL10nGlobal.csrf_token, rate: this.value},
-            function (response) {},
+            { action: 'bookly_update_calendar_refresh_rate', csrf_token: BooklyL10nGlobal.csrf_token, rate: this.value },
+            function (response) { },
             'json'
         );
         if (this.value > 0) {
@@ -183,78 +188,34 @@ jQuery(function ($) {
 
     refreshBooklyCalendar();
 
-    // View buttons
-    if (['dayGridMonth', 'timeGridWeek', 'resourceTimeGridDay', 'listWeek'].includes(lastView)) {
-        headerToolbar.end = 'dayGridMonth,timeGridWeek,resourceTimeGridDay,grid listWeek';
-    } else {
-        headerToolbar.end = 'resourceTimelineMonth,resourceTimelineWeek,resourceTimelineDay,timeline listWeek';
-    }
-
     /**
      * Init Calendar.
      */
     let calendar = new BooklyCalendar($calendar, {
         calendar: {
-            // General Display.
             headerToolbar: headerToolbar,
-            // Views.
             view: lastView === 'listWeekTimeline' ? 'listWeek' : lastView,
             views: {
                 resourceTimeGridDay: {
                     resources: staffMembers,
                     filterResourcesWithEvents: BooklyL10n.filterResourcesWithEvents,
-                    titleFormat: {year: 'numeric', month: 'short', day: 'numeric', weekday: 'short'}
                 },
-                resourceTimelineDay: {
-                    resources: staffMembers,
-                    titleFormat: {year: 'numeric', month: 'short', day: 'numeric', weekday: 'short'}
-                },
-                resourceTimelineMonth: {
-                    slotDuration: {days: 1},
-                    resources: staffMembers,
-                },
-                resourceTimelineWeek: {
-                    resources: staffMembers,
-                },
-            }
+            },
         },
         getCurrentStaffId: function () {
             return $staffLinks.filter('.active').data('staff_id');
         },
-        getStaffMemberIds: function () {
-            let ids = [],
-                staffId = this.getCurrentStaffId()
-            ;
-
-            if (staffId == 0) {
-                staffMembers.forEach(function (staff) {
-                    ids.push(staff.id);
-                });
-            } else {
-                ids.push(staffId);
-            }
-
-            return ids;
-        },
         getLocationIds: function () {
             return locationIds;
         },
-        getServiceIds: function () {
-            return serviceIds;
-        },
         refresh: refreshBooklyCalendar,
         viewChanged: function (view) {
-            if (view.type === 'listWeek' && calendar.ec.getOption('headerToolbar').end.includes('resourceTimelineMonth')) {
-                setCookie('bookly_cal_view', 'listWeekTimeline');
-            } else {
-                setCookie('bookly_cal_view', view.type);
-            }
-            resizeTimer = setTimeout(function () {
-                calendar.ec.setOption('height', heightEC(view.type));
-            }, 0);
+            setCookie('bookly_cal_view', view.type);
         },
         l10n: BooklyL10n
     });
+    });
+
 
     function heightEC(view_type) {
         let calendar_tools_height = 81,

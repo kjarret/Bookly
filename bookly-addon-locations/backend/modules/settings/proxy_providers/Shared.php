@@ -11,7 +11,7 @@ class Shared extends Proxy\Shared
      */
     public static function renderMenuItem()
     {
-        Menu::renderItem( __( 'Locations', 'bookly' ), 'locations' );
+        Menu::renderItem(__('Locations', 'bookly'), 'locations');
     }
 
     /**
@@ -19,22 +19,26 @@ class Shared extends Proxy\Shared
      */
     public static function renderTab()
     {
-        self::renderTemplate( 'settings_tab' );
+        self::renderTemplate('settings_tab');
     }
 
     /**
      * @inheritDoc
      */
-    public static function saveSettings( array $alert, $tab, array $params )
+    public static function saveSettings(array $alert, $tab, array $params)
     {
-        if ( $tab == 'locations' ) {
-            $options = array( 'bookly_locations_allow_services_per_location' );
-            foreach ( $options as $option_name ) {
-                if ( array_key_exists( $option_name, $params ) ) {
-                    update_option( $option_name, $params[ $option_name ] );
+        if ($tab == 'locations') {
+            $options = array(
+                'bookly_locations_allow_services_per_location',
+                'bookly_locations_default_color' // Nouvelle option pour les couleurs des localisations
+            );
+            foreach ($options as $option_name) {
+                if (array_key_exists($option_name, $params)) {
+                    update_option($option_name, $params[$option_name]);
                 }
             }
-            $alert['success'][] = __( 'Settings saved.', 'bookly' );
+
+            $alert['success'][] = __('Settings saved.', 'bookly');
         }
 
         return $alert;
@@ -43,10 +47,10 @@ class Shared extends Proxy\Shared
     /**
      * @inheritDoc
      */
-    public static function prepareCalendarAppointmentCodes( array $codes, $participants )
+    public static function prepareCalendarAppointmentCodes(array $codes, $participants)
     {
-        $codes['location_info'] = __( 'Location info', 'bookly' );
-        $codes['location_name'] = __( 'Location name', 'bookly' );
+        $codes['location_info'] = __('Location info', 'bookly');
+        $codes['location_name'] = __('Location name', 'bookly');
 
         return $codes;
     }
@@ -54,18 +58,18 @@ class Shared extends Proxy\Shared
     /**
      * @inheritDoc
      */
-    public static function prepareCodes( array $codes, $section )
+    public static function prepareCodes(array $codes, $section)
     {
-        switch ( $section ) {
-            case 'calendar_one_participant' :
-            case 'calendar_many_participants' :
-            case 'woocommerce' :
-            case 'google_calendar' :
-            case 'outlook_calendar' :
+        switch ($section) {
+            case 'calendar_one_participant':
+            case 'calendar_many_participants':
+            case 'woocommerce':
+            case 'google_calendar':
+            case 'outlook_calendar':
             case 'ics_for_staff':
             case 'ics_for_customer':
-                $codes['location_info'] = array( 'description' => __( 'Location info', 'bookly' ), 'if' => true );
-                $codes['location_name'] = array( 'description' => __( 'Location name', 'bookly' ) );
+                $codes['location_info'] = array('description' => __('Location info', 'bookly'), 'if' => true);
+                $codes['location_name'] = array('description' => __('Location name', 'bookly'));
                 break;
         }
 

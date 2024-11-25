@@ -12,21 +12,26 @@ class Local extends Proxy\Locations
      */
     public static function renderCalendarLocationFilter()
     {
-        $locations = Location::query( 'l' )
-            ->select( 'l.id, l.name' )
-            ->sortBy( 'l.position' )
+        // Inclure la couleur des localisations dans les données récupérées
+        $locations = Location::query('l')
+            ->select('l.id, l.name, l.color')
+            ->sortBy('l.position')
             ->fetchArray();
 
-        self::renderTemplate( 'location_filter', array( 'locations' => $locations ) );
+        self::renderTemplate('location_filter', array(
+            'locations' => $locations,
+        ));
     }
 
     /**
      * @inheritDoc
      */
-    public static function prepareCalendarQuery( BooklyLib\Query $query )
+    public static function prepareCalendarQuery(BooklyLib\Query $query)
     {
         return $query
-            ->leftJoin( 'StaffLocation', 'sl', 'sl.staff_id = st.id AND sl.location_id = a.location_id', '\BooklyLocations\Lib\Entities' )
-            ->leftJoin( 'StaffService', 'ss', 'ss.staff_id = a.staff_id AND ss.service_id = a.service_id AND ss.location_id <=> IF(sl.custom_services = 1,a.location_id,null)' );
+            ->leftJoin('StaffLocation', 'sl', 'sl.staff_id = st.id AND sl.location_id = a.location_id', '\BooklyLocations\Lib\Entities')
+            ->leftJoin('StaffService', 'ss', 'ss.staff_id = a.staff_id AND ss.service_id = a.service_id AND ss.location_id <=> IF(sl.custom_services = 1,a.location_id,null)')
+            ->leftJoin('Location', 'loc', 'loc.id = a.location_id', '\BooklyLocations\Lib\Entities') // Joindre les localisations pour accéder à leur couleur
+            ->addSelect('loc.color AS location_color'); // Ajouter la couleur des localisations dans les résultats
     }
 }

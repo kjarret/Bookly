@@ -1,4 +1,4 @@
-<?php defined( 'ABSPATH' ) || exit; // Exit if accessed directly
+<?php defined('ABSPATH') || exit; // Exit if accessed directly
 use Bookly\Backend\Components\Controls\Buttons;
 use Bookly\Backend\Components\Controls\Inputs;
 ?>
@@ -7,55 +7,69 @@ use Bookly\Backend\Components\Controls\Inputs;
         <div class="modal-content">
             <form>
                 <div class="modal-header">
-                    <h5 class="modal-title" id="bookly-new-locations-title"><?php esc_html_e( 'New Location', 'bookly' ) ?></h5>
-                    <h5 class="modal-title" id="bookly-edit-locations-title"><?php esc_html_e( 'Edit Location', 'bookly' ) ?></h5>
-                    <button type="button" class="close" data-dismiss="bookly-modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h5 class="modal-title" id="bookly-new-locations-title">
+                        <?php esc_html_e('New Location', 'bookly') ?></h5>
+                    <h5 class="modal-title" id="bookly-edit-locations-title">
+                        <?php esc_html_e('Edit Location', 'bookly') ?></h5>
+                    <button type="button" class="close" data-dismiss="bookly-modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-sm-12">
-                            <div class=form-group>
-                                <label for="bookly-location-name"><?php esc_html_e( 'Name', 'bookly' ) ?></label>
+                            <div class="form-group">
+                                <label for="bookly-location-name"><?php esc_html_e('Name', 'bookly') ?></label>
                                 <input type="text" id="bookly-location-name" class="form-control" name="name" />
                             </div>
                         </div>
                         <div class="col-sm-12">
-                            <div class=form-group>
-                                <label for="bookly-location-info"><?php esc_html_e( 'Info', 'bookly' ) ?></label>
+                            <div class="form-group">
+                                <label for="bookly-location-info"><?php esc_html_e('Info', 'bookly') ?></label>
                                 <textarea id="bookly-location-info" class="form-control" name="info"></textarea>
                                 <small class="text-muted">
-                                    <?php printf( __( 'This text can be inserted into notifications with %s code.', 'bookly' ), '{location_info}' ) ?>
+                                    <?php printf(__('This text can be inserted into notifications with %s code.', 'bookly'), '{location_info}') ?>
                                 </small>
                             </div>
                         </div>
-                        <div class="col-sm-12" >
-                            <ul id="bookly-js-staff"
-                                data-txt-select-all="<?php esc_attr_e( 'All staff', 'bookly' ) ?>"
-                                data-txt-all-selected="<?php esc_attr_e( 'All staff', 'bookly' ) ?>"
-                                data-txt-nothing-selected="<?php esc_attr_e( 'No staff selected', 'bookly' ) ?>"
-                            >
-                                <?php foreach ( $staff_dropdown_data as $category_id => $category ): ?>
-                                    <li<?php if ( ! $category_id ) : ?> data-flatten-if-single<?php endif ?>><?php echo esc_html( $category['name'] ) ?>
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="bookly-location-color"><?php esc_html_e('Color', 'bookly') ?></label>
+                                <input type="text" id="bookly-location-color" name="color"
+                                    class="form-control bookly-js-color-picker" value="#cccccc" />
+                                <small class="text-muted">
+                                    <?php esc_html_e('This color will be used to identify events for this location in the calendar.', 'bookly') ?>
+                                </small>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <ul id="bookly-js-staff" data-txt-select-all="<?php esc_attr_e('All staff', 'bookly') ?>"
+                                data-txt-all-selected="<?php esc_attr_e('All staff', 'bookly') ?>"
+                                data-txt-nothing-selected="<?php esc_attr_e('No staff selected', 'bookly') ?>">
+                                <?php foreach ($staff_dropdown_data as $category_id => $category): ?>
+                                    <li<?php if (!$category_id): ?> data-flatten-if-single<?php endif ?>>
+                                        <?php echo esc_html($category['name']) ?>
                                         <ul>
-                                            <?php foreach ( $category['items'] as $staff ) : ?>
-                                                <?php $archived = $staff_collection[ $staff['id'] ]['visibility'] === 'archive' ?>
-                                                <?php printf( '<li data-input-name="staff_ids[]" data-value="%d"%s>%s%s</li>',
+                                            <?php foreach ($category['items'] as $staff): ?>
+                                                <?php $archived = $staff_collection[$staff['id']]['visibility'] === 'archive' ?>
+                                                <?php printf(
+                                                    '<li data-input-name="staff_ids[]" data-value="%d"%s>%s%s</li>',
                                                     $staff['id'],
                                                     $archived ? ' class="text-muted"' : '',
-                                                    esc_html( $staff['full_name'] ),
-                                                    esc_html( $archived ? ' — ' . __( 'Archived', 'bookly' ) : '' )
+                                                    esc_html($staff['full_name']),
+                                                    esc_html($archived ? ' — ' . __('Archived', 'bookly') : '')
                                                 ) ?>
                                             <?php endforeach ?>
                                         </ul>
-                                    </li>
-                                <?php endforeach ?>
+                                        </li>
+                                    <?php endforeach ?>
                             </ul>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <?php Inputs::renderCsrf() ?>
-                    <?php Buttons::renderSubmit( 'bookly-location-save' ) ?>
+                    <?php Buttons::renderSubmit('bookly-location-save') ?>
                     <?php Buttons::renderCancel() ?>
                 </div>
             </form>
