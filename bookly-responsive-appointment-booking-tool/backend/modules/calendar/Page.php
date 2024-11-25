@@ -112,4 +112,31 @@ class Page extends Lib\Base\Ajax
 
         return $query->fetchArray();
     }
+    public static function addBooklyMenuItem($calendar_badge)
+    {
+        $calendar = __('Calendar', 'bookly');
+        if ($calendar_badge) {
+            add_submenu_page(
+                'bookly-menu',
+                $calendar,
+                sprintf('%s <span class="update-plugins count-%d"><span class="update-count">%d</span></span>', $calendar, $calendar_badge, $calendar_badge),
+                'read',
+                self::pageSlug(),
+                function () {
+                    Page::render();
+                }
+            );
+        } else {
+            add_submenu_page(
+                'bookly-menu',
+                $calendar,
+                $calendar,
+                'read',
+                self::pageSlug(),
+                function () {
+                    Page::render();
+                }
+            );
+        }
+    }
 }
